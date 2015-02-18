@@ -1,0 +1,31 @@
+<div class="container">
+	<%= form_for @initiative do |i| %>
+			<%= i.label :title %><br />
+			<%= i.text_field :title %><br />
+
+			<%= i.label :body, 'Content' %><br />
+			<%= i.text_area :body %><br />
+			<hr />
+			<div class="votescope">
+			<h5>Voting Scope:</h5> <br /> 
+				<%= radio_button_tag(:scope, "local") %>
+				<%= label_tag(:scope, "Local") %>
+				<%= radio_button_tag(:scope, "regional") %>
+				<%= label_tag(:scope, "Regional") %>
+				<%= radio_button_tag(:scope, "national") %>
+				<%= label_tag(:scope, "National") %>
+			 </div>
+      		<hr />
+
+			<%= i.label :category %><br />
+			<%= select(:initiative, :category, [['Internal', 'internal'], ['Meta-platform', 'meta'], ['Public action', 'public']])%><br />
+			<hr />
+			<%= i.label :deadline, 'Voting Deadline' %> <br />
+			<%= i.datetime_select :deadline %> <br /> 
+			<hr /> 
+			<%= i.submit "Post Initiative" %>
+		<% end %>
+
+
+
+</div>

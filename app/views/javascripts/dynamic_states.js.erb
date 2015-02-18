@@ -1,0 +1,25 @@
+var states = new Array();
+<% for locality in @localities -%>
+  localities.push(new Array(<%= locality.county_id %>, '<%=h locality.name %>', <%= locality.id %>));
+<% end -%>
+
+function localitySelected() {
+  county_id = $('person_county_id').getValue();
+  options = $('person_locality_id').options;
+  options.length = 1;
+  localities.each(function(locality) {
+    if (locality[0] == county_id) {
+      options[options.length] = new Option(locality[1], locality[2]);
+    }
+  });
+  if (options.length == 1) {
+    $('state_field').hide();
+  } else {
+    $('state_field').show();
+  }
+}
+
+document.observe('dom:loaded', function() {
+  countrySelected();
+  $('person_country_id').observe('change', countrySelected);
+});

@@ -1,0 +1,65 @@
+<div class="container">
+    <h2>Edit <%= resource_name.to_s.humanize %></h2>
+
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+      <%= devise_error_messages! %>
+
+
+      <div class="field">
+        <%= f.label :name %><br />
+        <%= f.text_field :name %>
+      </div><br />
+
+     <div class="field">
+     <%= f.label :county %>
+     <%= f.collection_select :county, County.all.order('name'), :name, :name %> 
+     </div><br />
+
+      <div class="field">
+      <%= f.label :locality %>
+      <%= f.collection_select :locality, Locality.all.order('name'), :name, :name %> <br /> 
+      </div>
+
+      <div class="field">
+        <%= f.label :declaration, "What do you want to accomplish with us?" %><br />
+        <%= f.text_area :declaration %>
+      </div><br /> 
+
+      <div class="field">
+        <%= f.label :email %><br />
+        <%= f.email_field :email, autofocus: true %>
+      </div>
+
+      <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+        <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+      <% end %>
+
+      <div class="field">
+        <%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
+        <%= f.password_field :password, autocomplete: "off" %>
+      </div>
+
+      <div class="field">
+        <%= f.label :password_confirmation %><br />
+        <%= f.password_field :password_confirmation, autocomplete: "off" %>
+      </div>
+
+      <div class="field">
+        <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
+        <%= f.password_field :current_password, autocomplete: "off" %>
+      </div>
+
+      <div class="actions">
+        <%= f.submit "Update" %>
+      </div>
+    <% end %>
+    <hr /> 
+    <p><strong> We use <a href="https://en.gravatar.com/">Gravatar</a> for your profile image. Make sure that you are registered with them and using the same email address as you do with us.</strong></p>
+    <hr /> 
+
+    <h3>Cancel my account</h3>
+
+    <p>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete %></p>
+
+    <%= link_to "Back", :back %>
+</div>

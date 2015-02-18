@@ -1,0 +1,72 @@
+<div class="container">
+	<a class="btn btn-info btn-lg" href=<%=new_initiative_path %>>New Initiative</a>
+
+	
+	
+	<div class="container navtabs">
+
+		<div class="row">
+			<div class="col-md-12">
+				<ul class="nav nav-tabs">
+					<li class="active"><a href="#tab1" data-toggle="tab">All initiatives</a></li>
+					<li><a href="#tab2" data-toggle="tab">Internal</a></li>
+					<li><a href="#tab3" data-toggle="tab">Public/Actions</a></li>
+					<li> <a href="#tab4" data-toggle="tab">Meta/Platform</a></li>
+				</ul>
+
+				<!-- Tabs -->
+				<div class="tab-content">
+					<div class="tab-pane" id="tab2">
+						<% @initiatives.where(category: 'internal').each do |i| %>
+							
+						<div class="thumbnail">
+							<h4><%= link_to i.title, initiative_path(i) %></h4><br />
+							<p><%= i.body %></p><hr />
+							<p><%= pluralize(i.comments.count, 'comment')%></p>
+						</div>
+					<% end %>
+					</div>		
+					<div class="tab-pane active" id="tab1"> 
+
+							<% @initiatives.each do |i| %>
+
+								<div class="thumbnail">
+									<h4><%= link_to i.title, initiative_path(i) %></h4><br />
+									<p><%= i.body %></p> <hr />
+									<p><%= pluralize(i.comments.count, 'comment')%></p>
+								</div>
+							<% end %> 
+
+
+					</div>
+					<div class="tab-pane" id="tab3">
+						
+							<% @initiatives.where(category: 'public').each do |i| %>
+								<div class="thumbnail">
+								<h4><%= link_to i.title, initiative_path(i) %></h4> <br />
+								<p><%= i.body %></p><hr />
+								<p><%= pluralize(i.comments.count, 'comment')%></p>
+								</div>
+							<% end %>
+
+								
+					</div>
+
+					<div class="tab-pane" id="tab4">
+						
+							<% @initiatives.where(category: 'meta').each do |i| %>
+								<div class="thumbnail">
+									<h4><%= link_to i.title, initiative_path(i) %></h4><br />
+									<p><%= i.body %></p> <hr />
+									<p><%= pluralize(i.comments.count, 'comment')%></p>
+								</div>
+							<% end %>
+
+						
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>

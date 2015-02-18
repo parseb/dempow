@@ -1,0 +1,14 @@
+<div class="container">
+	<h4>All Users:</h4>
+	<% @users.each do |u| %>
+		<div class="user">
+			<div class="identity">		
+				<%= link_to image_tag(avatar_url(u))+"#{u.name}", user_path(u) %> <br /> 		
+			</div>
+			<ul>
+					<li><%= u.locality.to_s + ", " + u.county.to_s %></li>
+					<li><%= u.declaration %></li> 
+			</ul>
+		</div>
+	<% end %>
+</div>

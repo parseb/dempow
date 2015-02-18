@@ -1,0 +1,150 @@
+
+<div class="container">
+	
+	
+	<div class="well">
+			<div class="identity">
+				<%= link_to image_tag(avatar_url(User.find(@initiative.user_id)))+"#{@initiative.user.name}", user_path(@initiative.user.id) %> 
+			</div>
+			<h4><%= @initiative.title %>(<%=@initiative.category %>) <span class="status"> <%= "Status: " + @initiative.status.to_s + ' | ' + @scope.to_s + ' | (' + @scopeid.to_s + ')' %></span></h4><br />
+				<div class="ibody"><h5> <%= @initiative.body %> </h5> </div>	
+				<hr />
+
+			<span id='delegationsnr'><%= 'You have been delegated: ' + pluralize(@delegations.where(initiative_id: @initiative.id, to: current_user.id).count, 'time') %></span>	<br /> 
+			<% if Vote.where(initiative_id: @initiative.id).any? %>	
+				<span id='pro'>Votes for: <%= " " + @pro.to_s + " | " %></span>
+				<span id="against">Votes against: <%= @against.to_s + " | " %> </span>
+				<span id="abstaine"> Abstentitons: <%= @abstain.to_s %> </span>
+			<% else %>
+				<p> No one voted on this initiative yet. </p>
+			<% end %> 
+			<br /> 
+			<!-- late delegations -->  
+			<p>Deadline for voting: <%= @initiative.deadline.strftime("%d-%m-%Y %H:%M") %> </p>
+<!-- SCOPE logic -->
+		
+<% if @scopeid === current_user.locality || @scopeid === current_user.county || @scopeid === 'National' %>
+
+
+<!--   #################   --> 
+<% unless @initiative.deadline < Time.now %>	
+		<% if @uivotes < (@uideleg + 1) || @uivotes === 0 %> 
+
+		<% unless @delegations.where(initiative_id: @initiative.id, user_id: current_user.id).any?  #&& Vote.where(user_id: current_user.id, initiative_id: @initiative.id).count > @delegations.where(initiative_id: @initiative.id, to: current_user.id).count  %>
+		<!-- VOTE #######-->
+			<div class="vote">
+				<%= form_for [@initiative, @vote] do |v| %> 
+						<%= v.label :vtype, "For" %>
+						<%= v.radio_button(:vtype, "for") %><br /> 
+						<%= v.label :vtype, "Against" %>
+						<%= v.radio_button(:vtype, 'against') %><br />
+						<%= v.label :vtype, "Abstain" %>
+						<%= v.radio_button(:vtype, 'abstain') %> <br />  				
+
+						<%= v.submit 'Vote!' %> 	
+				<% end %>
+			</div><br /> 
+		<% end %>
+
+		<!-- ####DLEGATION FORM & LOGIC -->
+
+		<% unless @delegations.where(initiative_id: @initiative.id, user_id: current_user.id).any? || @delegations.where(initiative_id: @initiative.id, to: current_user.id).any? %>	
+			<div class="delegationc">
+				
+			
+
+<script type="text/javascript">
+    $(function() {
+ 		
+    $('#delegatee').autocomplete({	
+            minLength: 2,
+            source: '<%= json_path %>',
+           
+            focus: function(event, ui) {
+            	console.log("xxxxxx");
+            	console.log(ui);
+
+                $('#delegatee').val(ui.item.name);
+                return false;
+            },
+
+            select: function(event, ui) {
+
+                $('#delegatee').val(ui.item.name); 
+        $('#delegatee_id').val(ui.item.id);
+                return false;
+            }
+        })
+        .data("uiAutocomplete")._renderItem = function( ul, item ) {
+            return $( "<li></li>" )      
+                .data( "item.autocomplete", item )
+
+                .append( "<a>" + item.name + "</a>" )
+                .appendTo( ul );
+        };
+    });
+
+</script>
+
+
+
+			<%= form_for [@initiative, @delegation] do |dc| %>
+
+					<%= hidden_field :initiative_id, value: @initiative.id %>
+				
+				  <input id="delegatee"/>
+
+			      <input id="delegatee_id" name="to[id]" type="hidden"/>
+					<%= dc.submit 'Delegate!' %>
+			<% end %>
+			</div>
+		<% end %> 
+	<% end %>
+<!-- ########## -->
+<% end %>
+
+<!-- Scope END -->
+<% end %>
+			<hr />
+
+
+		<div class='text'>
+			<% if @initiative.user_id === current_user.id %>
+				<%= link_to "Delete", initiative_path(@initiative), method: :delete %><%= " | " %>    
+			<% end %> 
+				<%= pluralize(@initiative.comments.count, 'comment') %> | 
+			<div class="time"> <%= distance_of_time_in_words(@initiative.created_at, Time.now).to_s + " ago" %> </div>
+		</div>
+	</div>	
+		<div class='divider'>
+  
+		  <% @comments.where(initiative_id: @initiative.id).each do |c| %>
+		  	<div class='panel panel-info'>
+		  		<div class="identity">
+					<%= link_to image_tag(avatar_url(User.find(c.user_id)))+"#{c.user.name}", user_path(c.user.id) %> 
+				</div>
+			    
+			    <h4><%= c.ctitle %></h4> <br />
+			    <h6><%= c.cbody %> </h6>
+			</div>
+		  <% end %> 
+		</div>
+		<h3>Your Opinion:</h3>
+
+		<%= form_for [@initiative, @comment], url: initiative_comments_path(@initiative) do |f| %>
+
+		    <% f.label :initiative_id %>
+		    <%= f.hidden_field :initiative_id, value: @initiative.id %>
+
+		    <%= f.label :ctitle, "Title" %><br/>
+		    <%= f.text_field :ctitle %>
+		  <p>
+		    <%= f.label :cbody, "Content" %><br/>
+		    <%= f.text_area :cbody %>
+		  </p>
+		  <p>
+		    <%= f.submit 'Post' %>
+		  </p>
+	  <% end %>
+</div>
+

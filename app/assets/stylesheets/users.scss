@@ -1,0 +1,34 @@
+// Place all the styles related to the users controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.round-image-150 {
+    border: 1px solid #d9d9d9;
+    height: 150px;
+    width: 150px;
+    img { width: 100% }
+}
+
+.declaration {
+	
+}
+
+.quotes1 {
+	font-size: 300%;
+}
+
+.quotes2 {
+	font-size: 300%;	
+}
+
+.thumbnail {
+        position: relative;
+        padding: 0px;
+        margin-bottom: 20px;
+    }
+
+        .thumbnail:hover {
+            background-color: #5CB85C;
+        }
+
+

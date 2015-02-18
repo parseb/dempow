@@ -1,0 +1,110 @@
+<div class="container user">
+
+	<div class="jumbotron user">
+		<div class="row">
+			<div class="col-sm-4">
+				<div class="well">
+					<h6>Name: <%= @user.name %></h6>
+					<h6>Lives in: <%= @user.locality %>, <%= @user.county %> </h6>
+					<div class="follow">	
+					<section class="stats">
+        				<%= render 'shared/stats' %>
+      				</section>
+					<%= render 'follow_form'%>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-8">
+				<div class="well clearfix">
+					<div class="round-image-150"> <%= image_tag avatar_url(@user) %> </div> 
+					<div class='declaration'> 
+						<h5><span class='quotes1'>"</span><%= @user.declaration %><span class="quotes2">"</span> </h5>
+					</div> 
+
+
+				</div>
+
+			</div>
+
+
+
+		</div>
+
+	</div>
+
+	<div class="container navtabs">
+
+		<div class="row">
+			<div class="col-md-12">
+				<ul class="nav nav-tabs">
+					<li class="active"><a href="#tab1" data-toggle="tab">Feed</a></li>
+					<li><a href="#tab2" data-toggle="tab">Blog</a></li>
+					<li><a href="#tab3" data-toggle="tab">My initiatives</a></li>
+				</ul>
+
+				<!-- Tabs -->
+				<div class="tab-content">
+					<div class="tab-pane active" id="tab1">
+						<% @feed_items.each do |fi| %>
+							<div class="thumbnail">
+								<div class="identity">
+								<%= link_to image_tag(avatar_url(User.find(fi.user_id)))+"#{fi.user.name}", user_path(fi.user.id) %> 
+								</div>
+								<!-- add path to title post/init -->
+								
+
+								<%= fi.body %>
+								<div class="time"> <%= distance_of_time_in_words(fi.created_at, Time.now).to_s + " ago" %> </div>
+							</div>
+						<% end %>
+					</div>		
+					<div class="tab-pane" id="tab2"> 
+						<% if @user.id === current_user.id %>
+							<a class='btn btn-info' href=<%= new_post_path %>> New Post </a>
+					
+						<% end %>
+
+							<% @posts.each do |p| %>
+
+							<div class="thumbnail">
+								<div class="identity">
+								<%= link_to image_tag(avatar_url(@user))+"#{@user.name}", user_path(@user) %> 
+								</div>
+								<h4><%= link_to p.title, post_path(p) %></h4><hr />
+								<p><%= p.body %></p> 
+								<% if p.user_id === current_user.id %>
+									<%= link_to "Delete ", post_path(p), method: :delete %><%= ' | ' %> 
+									<% end %><%= 'Rating: ' + p.ratings.average(:value).to_s %> |  
+									<div class="time"> <%= distance_of_time_in_words(p.created_at, Time.now).to_s + " ago" %> </div>   
+							</div>
+							<% end %> 
+
+
+					</div>
+					<div class="tab-pane" id="tab3">
+						<% if current_user.id === @user.id %>
+						
+								<a class="btn btn-info" href=<%= new_initiative_path %>>New Initiative</a>
+						
+
+						<% end %>
+						<% @initiatives.where(user_id: @user.id).each do |i| %>
+							<div class="thumbnail">
+								<div class="identity">
+								<%= link_to image_tag(avatar_url(@user))+"#{@user.name}", user_path(@user) %> 
+								</div>
+								<h4><%= link_to i.title + '  (' + ("#{i.category}") + ')', initiative_path(i) %> </h4><hr />
+								<p><%= i.body %></p><br /> 
+								<div class="time"> <%= distance_of_time_in_words(i.created_at, Time.now).to_s + " ago" %> </div>
+							</div>
+						<% end %>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+</div>
+

@@ -1,0 +1,61 @@
+<div class="container">
+  <div class="identity">
+    <%= link_to image_tag(avatar_url(User.find(@post.user_id)))+"#{@post.user.name}", user_path(@post.user_id) %> 
+  </div>
+	<h3><%= @post.title %></h3>
+	 <hr /> 
+	<h6><%= @post.body %></h6><hr />
+  <div class="time"> <%= distance_of_time_in_words(@post.created_at, Time.now).to_s + " ago" %> </div>
+
+    <% unless @post.user_id === current_user.id %>
+    <% if @post.ratings.where(user_id: current_user.id).none? %>
+         
+        <%= form_for [@post, @rating] do |r| %>
+          <%= select(:value, :value, [['1', 1], ['2', 2], ['3', 3], ['4', 4], ['5', 5]])%>
+          <%= hidden_field :post_id, value: @post.id %> 
+          <%= r.submit "Rate" %> 
+          <% end %> 
+      </p> 
+   <% end %>
+   <% end %>  
+    <p> 
+        <% if @post.ratings.any? && @post.ratings.count != 0 %>
+             <% if @post.ratings.where(user_id: current_user.id).any? %>
+                <%= 'Your Mark: ' + @post.ratings.where(user_id: current_user.id).first.value.to_i.to_s + ' | ' %>  
+               <% end %> 
+               <%= 'Average:' + @post.ratings.average(:value).to_s %> 
+          <% end %> 
+    </p>  
+
+	
+	<h3>Your Comment:</h3>
+
+	<%= form_for [@post, @comment] do |f| %>
+
+    <% f.label :post_id,'post_id' %>
+    <%= f.hidden_field :post_id, value: @post.id %>
+
+    <%= f.label :ctitle, "Title" %><br/>
+    <%= f.text_field :ctitle %>
+  <p>
+    <%= f.label :cbody, "Content" %><br/>
+    <%= f.text_area :cbody %>
+  </p>
+  <p>
+    <%= f.submit 'Post' %>
+  </p>
+<% end %>
+<div class='divider'>
+  
+  <% @comments.where(post_id: @post.id).each do |c| %>
+  <div class='panel panel-info'>
+
+    <div class="identity">
+       <%= link_to image_tag(avatar_url(User.find(c.user_id)))+"#{c.user.name}", user_path(c.user.id) %> 
+    </div>
+    <h4>Title: <%= c.ctitle %></h4> <br />
+    <p><%= c.cbody %> </p> <hr />
+    <%= rating_for c, dimension: :crating %>
+  <% end %> 
+</div>
+</div>

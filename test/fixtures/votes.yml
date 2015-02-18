@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  initiative_id: 
+  user_id: 
+  value: 1
+
+two:
+  initiative_id: 
+  user_id: 
+  value: 1
