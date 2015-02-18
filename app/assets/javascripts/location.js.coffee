@@ -5,11 +5,11 @@ jQuery ->
 	$('#user_county').change ->
 		county = $('#user_county :selected').text()
 		options = $(localities).filter("optgroup[label='#{county}']").html()
+		console.log(options)
 		if options 
 			$('#user_locality').html(options)
 			$('#user_locality').parent().show()
 		else
 			$('#user_locality').empty()
 			$('#user_locality').parent().hide()
-
 		
