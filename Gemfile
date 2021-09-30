@@ -60,6 +60,6 @@ gem 'arel', '6.0.0.beta2'
 
 gem 'devise'
 
-gem 'paperclip', '~> 4.1'
+gem 'paperclip', '~> 4.2'
 
 gem 'jquery-ui-rails'
